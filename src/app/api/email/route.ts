@@ -2,16 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/lib/nodemailer";
 import { registeredPw } from "@/hooks/search/useSearchPw";
 import { generateToken } from "@/lib/tokenService";
+import { BASE_URL } from "@/constants";
 
 export async function POST(request: NextRequest) {
   try {
     const { email, type, name, userId } = await request.json();
 
     if (!email) {
-      return NextResponse.json(
-        { message: "이메일을 입력하세요." },
-        { status: 400 },
-      );
+      return NextResponse.json({ message: "이메일을 입력하세요." }, { status: 400 });
     }
 
     if (type === "passwordReset") {
@@ -37,8 +35,7 @@ export async function POST(request: NextRequest) {
         to: email,
         subject: "메일 인증을 해주세요",
         message: `안녕하세요, ${name}님. 인증을 위해 아래 링크를 클릭해주세요.`,
-        // link: `http://localhost:3000/sign?email=${email}`,
-        link: `http://localhost:3000/sign?token=${token}`,
+        link: `${BASE_URL}/sign?token=${token}`,
       });
 
       if (mailResult) {
@@ -49,9 +46,6 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error("이메일 발송 에러:", error);
-    return NextResponse.json(
-      { message: "이메일 발송에 실패했습니다." },
-      { status: 500 },
-    );
+    return NextResponse.json({ message: "이메일 발송에 실패했습니다." }, { status: 500 });
   }
 }

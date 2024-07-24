@@ -8,13 +8,14 @@ import { getFormattedDate } from "@/service/news/setTimestampToDate";
 
 import TranslateIcon from "../../../../../../public/images/Translate_icon.svg";
 import AiIcon from "../../../../../../public/images/logo/LOGO.svg";
+import { BASE_URL } from "@/constants";
 
 export type NewsDetailProps = {
   id: string;
 };
 
 export default async function NewsDetail({ id }: NewsDetailProps) {
-  const article = await (await fetch(`http://localhost:3000/api/news/${id}`)).json();
+  const article = await (await fetch(`${BASE_URL}api/news/${id}`)).json();
 
   const { contents } = article;
   const sentences = contents.split("다.");

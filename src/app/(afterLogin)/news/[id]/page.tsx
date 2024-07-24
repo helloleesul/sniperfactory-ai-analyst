@@ -3,6 +3,7 @@ import NewsDetail from "./_components/NewsDetail";
 import RelatedList from "./_components/RelatedList";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "@/firebase/firebaseConfig";
+import { BASE_URL } from "@/constants";
 
 type NewsDetailPageProps = {
   params: {
@@ -12,7 +13,7 @@ type NewsDetailPageProps = {
 
 export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
   const id = params.id;
-  const article = await (await fetch(`http://localhost:3000/api/news/${id}`)).json();
+  const article = await (await fetch(`${BASE_URL}/api/news/${id}`)).json();
   const { relatedStocks } = article;
   const stockList: StockInfo[] = [];
 
