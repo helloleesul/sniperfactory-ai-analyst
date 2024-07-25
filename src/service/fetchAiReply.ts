@@ -8,22 +8,17 @@ interface AiReplyParams {
   onFinally?: (value: string) => void;
 }
 
-async function fetchAiReply({
-  prompt,
-  temperature = 0.5,
-  top_p = 0.5,
-  onAiMessageHandler,
-  onFinally,
-}: AiReplyParams) {
+async function fetchAiReply({ prompt, temperature = 0.5, top_p = 0.5, onAiMessageHandler, onFinally }: AiReplyParams) {
   let aiMessage = "";
 
   try {
+    const token = await (await fetch(`${BASE_URL}/api/ai/token`, { cache: "no-store" })).json();
     const aiResponse = await fetch(`${BASE_URL}/api/ai/reply`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prompt, temperature, top_p }),
+      body: JSON.stringify({ prompt, token, temperature, top_p }),
     });
 
     if (!aiResponse.ok) {

@@ -1,5 +1,3 @@
-import { BASE_URL } from "@/constants";
-
 function iteratorToStream(iterator: any) {
   return new ReadableStream({
     async pull(controller) {
@@ -30,7 +28,7 @@ async function* streamResponse(response: Response) {
 }
 
 export async function POST(request: Request) {
-  const { prompt, temperature, top_p } = await request.json();
+  const { prompt, token, temperature, top_p } = await request.json();
 
   const LLAMA_REPLY_URL = process.env.LLAMA_REPLY_URL as string;
 
@@ -39,8 +37,6 @@ export async function POST(request: Request) {
     temperature,
     top_p,
   };
-
-  const token = await (await fetch(`${BASE_URL}/api/ai/token`, { cache: "no-store" })).json();
 
   const response = await fetch(LLAMA_REPLY_URL, {
     method: "POST",
@@ -51,7 +47,7 @@ export async function POST(request: Request) {
     body: JSON.stringify(generateBody),
   });
 
-  console.log("🚀 ~ POST ~ response:", response.status);
+  // console.log("🚀 ~ POST ~ response:", response.status);
 
   if (!response.body) {
     return Response.json({ error: "No response body" }, { status: 500 });
